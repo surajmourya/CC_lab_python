@@ -1,0 +1,79 @@
+class Stack:
+    def __init__(self):
+        self.data = []
+    
+    def push(self, item):
+        self.data.append(item)
+    
+    def pop(self):
+        if not self.is_empty():
+            return self.data.pop()
+        raise Exception("Stack is empty")
+    
+    def peek(self):
+        if not self.is_empty():
+            return self.data[-1]
+        raise Exception("Stack is empty")
+    
+    def is_empty(self):
+        return len(self.data) == 0
+
+
+class Queue:
+    def __init__(self):
+        self.data = []
+    
+    def enqueue(self, item):
+        self.data.append(item)
+    
+    def dequeue(self):
+        if not self.is_empty():
+            return self.data.pop(0)
+        raise Exception("Queue is empty")
+    
+    def is_empty(self):
+        return len(self.data) == 0
+
+
+def get_precedence(op):
+    if op in ('+', '-'):
+        return 1
+    elif op in ('*', '/'):
+        return 2
+    return 0
+
+
+def infix_to_postfix(infix):
+    operators = Stack()
+    output = Queue()
+    
+    for token in infix:
+        if token.isdigit():  # Operand
+            output.enqueue(token)
+        elif token == '(':
+            operators.push(token)
+        elif token == ')':
+            while not operators.is_empty() and operators.peek() != '(':
+                output.enqueue(operators.pop())
+            operators.pop()  # Discard '('
+        elif token in ('+', '-', '*', '/'):  # Operator
+            while not operators.is_empty() and get_precedence(operators.peek()) >= get_precedence(token):
+                output.enqueue(operators.pop())
+            operators.push(token)
+    
+    while not operators.is_empty():
+        output.enqueue(operators.pop())
+    
+    # Convert the output queue to a string
+    postfix_expression = ''.join(output.data)
+    return postfix_expression
+
+
+def main():
+    infix = input("Enter infix expression: ").strip()
+    postfix = infix_to_postfix(infix)
+    print(f"Postfix expression: {postfix}")
+
+
+if __name__ == "__main__":
+    main()
