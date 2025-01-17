@@ -1,0 +1,53 @@
+class Stack:
+    def __init__(self, n):
+        self.arr = [None] * n
+        self.top = -1
+
+    def is_empty(self):
+        return self.top == -1
+
+    def push(self, element):
+        self.top += 1
+        self.arr[self.top] = element
+
+    def pop(self):
+        if not self.is_empty():
+            value = self.arr[self.top]
+            self.top -= 1
+            return value
+        return -1  # Return -1 to indicate an empty stack
+
+
+def next_greater_element(arr, n):
+    st = Stack(n)
+    result = [-1] * n
+
+    for i in range(n - 1, -1, -1):
+        element = arr[i]
+        if st.is_empty():
+            st.push(element)
+            result[i] = -1
+            continue
+        if element < st.arr[st.top]:
+            result[i] = st.arr[st.top]
+            st.push(element)
+            continue
+        while not st.is_empty() and st.arr[st.top] <= element:
+            st.pop()
+        if st.is_empty():
+            result[i] = -1
+        else:
+            result[i] = st.arr[st.top]
+        st.push(element)
+
+    return result
+
+
+if __name__ == "__main__":
+    n = int(input("Enter the value of n: "))
+    arr = list(map(int, input("Enter the elements of the array:\n").split()))
+
+    result = next_greater_element(arr, n)
+
+    print("Result:")
+    print(" ".join(map(str, result)))

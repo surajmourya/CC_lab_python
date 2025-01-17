@@ -1,0 +1,46 @@
+class Stack:
+    def __init__(st, n):
+        st.arr = [None] * n
+        st.top = -1
+
+    def is_empty(st):
+        return st.top == -1
+
+    def push(st, element):
+        st.top += 1
+        st.arr[st.top] = element
+
+    def pop(st):
+        if not st.is_empty():
+            value = st.arr[st.top]
+            st.top -= 1
+            return value
+        return -1  # Return -1 to indicate an empty stack
+
+
+def evaluate_postfix(expression):
+    n = len(expression)
+    st = Stack(n)
+
+    for ch in expression:
+        if '0' <= ch <= '9':
+            st.push(int(ch))
+        else:
+            operand2 = st.pop()
+            operand1 = st.pop()
+            if ch == '+':
+                st.push(operand1 + operand2)
+            elif ch == '-':
+                st.push(operand1 - operand2)
+            elif ch == '*':
+                st.push(operand1 * operand2)
+            elif ch == '/':
+                st.push(operand1 // operand2)  # Integer division
+
+    return st.pop()
+
+
+if __name__ == "__main__":
+    postfix_expression = input("Enter a postfix expression: ")
+    result = evaluate_postfix(postfix_expression)
+    print("Result:", result)

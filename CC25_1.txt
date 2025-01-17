@@ -1,0 +1,88 @@
+class Stack:
+    def __init__(st, n):  
+        st.top = -1
+        st.all_stack = [None] * n
+        st.min_stack = [None] * n
+
+    def size(st):
+        return st.top + 1
+
+    def push(st, data):
+        st.top += 1
+        st.all_stack[st.top] = data
+        if st.top == 0 or data <= st.min_stack[st.top - 1]:
+            st.min_stack[st.top] = data
+        else:
+            st.min_stack[st.top] = st.min_stack[st.top - 1]
+
+    def top_element(st):
+        if st.top == -1:
+            return None
+        return st.all_stack[st.top]
+
+    def pop(st):
+        if st.top == -1:
+            return None
+        val = st.all_stack[st.top]
+        st.top -= 1
+        return val
+
+    def get_min(st):
+        if st.top == -1:
+            return None
+        return st.min_stack[st.top]
+
+    def run(st):
+        menu = (
+            "Menu:\n"
+            "1. Push\n"
+            "2. Pop\n"
+            "3. Top\n"
+            "4. Size\n"
+            "5. Min Element\n"
+            "6. Quit\n"
+        )
+        print(menu)
+
+        while True:
+            choice = int(input("Enter your choice: "))
+
+            if choice == 1:
+                val = int(input("Enter value to push: "))
+                st.push(val)
+
+            elif choice == 2:
+                val = st.pop()
+                if val is not None:
+                    print(f"Popped element: {val}")
+                else:
+                    print("Stack is empty.")
+
+            elif choice == 3:
+                val = st.top_element()
+                if val is not None:
+                    print(f"Top element: {val}")
+                else:
+                    print("Stack is empty.")
+
+            elif choice == 4:
+                print(f"Size of the stack: {st.size()}")
+
+            elif choice == 5:
+                min_val = st.get_min()
+                if min_val is not None:
+                    print(f"Min element: {min_val}")
+                else:
+                    print("Stack is empty.")
+
+            elif choice == 6:
+                print("Exiting the program.")
+                break
+
+            else:
+                print("Invalid choice. Please enter a valid option.")
+
+
+if __name__ == "__main__":
+    st = Stack(100)
+    st.run()
