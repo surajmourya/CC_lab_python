@@ -1,0 +1,39 @@
+from typing import List
+
+class Solution:
+    def __init__(self):
+        self.time = 0
+        self.result = []
+
+    def criticalConnections(self, n: int, connections: List[List[int]]) -> List[List[int]]:
+        # Create adjacency list
+        adj = [[] for _ in range(n)]
+        for edge in connections:
+            a, b = edge
+            adj[a].append(b)
+            adj[b].append(a)
+        
+        visited = [False] * n
+        timestamp = [0] * n
+        self.dfs(adj, visited, timestamp, 0, -1)
+        
+        return self.result
+
+    def dfs(self, adj: List[List[int]], visited: List[bool], timestamp: List[int], vertex: int, prev: int):
+        visited[vertex] = True
+        timestamp[vertex] = self.time
+        current_timestamp = self.time
+        self.time += 1
+        
+        for v in adj[vertex]:
+            if v == prev:
+                continue
+            
+            if not visited[v]:
+                self.dfs(adj, visited, timestamp, v, vertex)
+            
+            timestamp[vertex] = min(timestamp[vertex], timestamp[v])
+            
+            # Check if the edge is a critical connection (bridge)
+            if current_timestamp < timestamp[v]:
+                self.result.append([vertex, v])
